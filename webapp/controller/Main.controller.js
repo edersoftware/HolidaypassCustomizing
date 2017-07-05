@@ -646,6 +646,7 @@ sap.ui.define([
 			this.loadPriceData();
 		},
 		onSaveNewPeriod: function() {
+			var that = this;
 			var oModelNewPeriod = this.getView().getModel("NewPeriodUIModel");
 			var oNewPeriodRequest = {
 				Startdate: new Date(oModelNewPeriod.getProperty("/StartDate")),
@@ -661,6 +662,7 @@ sap.ui.define([
 			oModel.create("/HolidayPassPeriodSet", oNewPeriodRequest, {
 				success: function(oData, respone) {
 					MessageBox.success("Erfolgreich gesichert");
+					that.loadPeriodData();
 				},
 				error: function(oError) {
 					MessageBox.error("Technischer Fehler, bitte SAP CCC informieren");
