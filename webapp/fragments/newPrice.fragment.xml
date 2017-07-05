@@ -1,0 +1,26 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout">
+	<Popover title="Neuer Preis anlegen" class="sapUiContentPadding" placement="Auto" modal="true">
+		<content>
+			<f:SimpleForm minWidth="1024" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3"
+				emptySpanL="4" emptySpanM="4" columnsL="1" columnsM="1" class="editableForm">
+				<f:content>
+					<Label text="Type"/>
+					<Input type="Text" id = "oInputType"/>
+					<Label text="Preis für Bieler"/>
+					<Input type="Number" id = "oInputPriceBieler"/>
+					<Label text="Preis für Bieler Plus"/>
+					<Input type="Number" id = "oInputPriceBielerPlus"/>
+					<Label text="Preis für Nicht-Bieler"/>
+					<Input type="Number" id = "oInputPriceNotBieler"/>
+				</f:content>
+			</f:SimpleForm>
+		</content>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button id="cancelNewPeriod" text="Änderungen verwerfen" press="onCancelNewPrice"/>
+				<Button id="saveNewPeriod" text="Speichern" press="onSaveNewPrice"/>
+			</Toolbar>
+		</footer>
+	</Popover>
+</core:FragmentDefinition>

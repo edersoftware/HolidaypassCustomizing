@@ -1,0 +1,202 @@
+<mvc:View controllerName="ch.bielHolidayPassCustomizing.controller.Main" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core">
+	<App>
+		<pages>
+			<Page title="Ferienpass Einstellungen">
+				<content>
+					<IconTabBar id="idIconTabBarNoIcons" expanded="{device>/isNoPhone}" class="sapUiResponsiveContentPadding" select="onSelectTab">
+						<items>
+							<IconTabFilter text="Grundeinstellungen" key="baseSetting">
+								<f:SimpleForm minWidth="1024" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3"
+									emptySpanL="4" emptySpanM="4" columnsL="1" columnsM="1" class="editableForm">
+									<f:content>
+										<Label text="Kundenidentifikation"/>
+										<Input value="{BaseSettingUIModel>/CustomerIdent}"/>
+										<Label text="Abrechnungsjahr"/>
+										<Input value="{BaseSettingUIModel>/BillingYear}"/>
+										<Label text="Systemidentifikation"/>
+										<Input value="{BaseSettingUIModel>/Systemid}"/>
+										<Label text="Start Fakturanummer"/>
+										<Input value="{BaseSettingUIModel>/StartBillingNumber}"/>
+										<Label text="Aktuelle Fakturanummer"/>
+										<Input value="{BaseSettingUIModel>/BillingNumberAct}"/>
+										<Label text="Aktuelle SAP Ferienpass Debitorennummer"/>
+										<HBox>
+												<Input value="{BaseSettingUIModel>/SapDebitorAct}"/>
+												<Button class="sapUiMediumMarginBegin" text="Vom SAP System lesen" press = "handleGetNextSAPDebitorNumber"/>
+										</HBox>
+									
+										<Label text="Ziel-Kostenstelle"/>
+										<Input value="{BaseSettingUIModel>/Costcenter}"/>
+										<Label text="Ziel-PSP Element oder Investitionsauftrag"/>
+										<Input value="{BaseSettingUIModel>/PsPElement}"/>
+										<Label text="Ziel-Innenauftrag"/>
+										<Input value="{BaseSettingUIModel>/InternalOrder}"/>
+										<Label text="Ziel-Erlöskonto"/>
+										<Input value="{BaseSettingUIModel>/RedeemingAccount}"/>
+										<Label text="Wurzelverzeichnis für Ferienpass"/>
+										<Input value="{BaseSettingUIModel>/RootDirectory}"/>
+										<Label text=""/>
+										<Text text="Das SAP-System muss Vollzugriff auf dieses Verzeichnis haben"/>
+										<Label text="Export Verzeichnisname"/>
+										<Input value="{BaseSettingUIModel>/ExportDirectory}"/>
+										<Label text="Rechnungsprint Verzeichnisname"/>
+										<Input value="{BaseSettingUIModel>/PrintDirectory}"/>
+										<Label text="Drucker für Rechnungsmassendruck"/>
+										<Select id = "oSelectPrinter" forceSelection="true" selectedKey="{BaseSettingUIModel>/Printer}"
+											items="{ path: 'ZFP_SRV>/PrinterSet'}">
+											<core:Item key="{ZFP_SRV>Dest}" text="{ZFP_SRV>Name}"/>
+										</Select>
+										<Label text="Ferienpass SAP Debitoren Start"/>
+										<Input value="{BaseSettingUIModel>/SapDebitorStart}"/>
+										<Label text="Ferienpass SAP Debitoren End"/>
+										<Input value="{BaseSettingUIModel>/SapDebitorEnd}"/>
+									</f:content>
+								</f:SimpleForm>
+								<Button text="Änderungen verwerfen" press="onCancel" id="cancelBaseSetting"/>
+								<Button text="Änderungen speichern" press="onSave" id="saveBaseSetting"/>
+							</IconTabFilter>
+							<IconTabFilter text="Preise" key="prices">
+								<Table id="idPriceTable" inset="false" items="{ path: 'PriceUI>/', sorter: { path: 'Type' } }">
+									<headerToolbar>
+										<Toolbar>
+											<Title text="Preise" level="H2"/>
+										</Toolbar>
+									</headerToolbar>
+									<columns>
+										<Column>
+											<Text text="Type"/>
+										</Column>
+										<Column>
+											<Text text="Preis für Bieler"/>
+										</Column>
+										<Column>
+											<Text text="Preis für Bieler Plus"/>
+										</Column>
+										<Column>
+											<Text text="Preis für Nicht-Bieler"/>
+										</Column>
+										<Column/>
+									</columns>
+									<items>
+										<ColumnListItem>
+											<cells>
+												<ObjectIdentifier title="{PriceUI>Type}"/>
+												<Input type="Number" value="{PriceUI>PriceBieler}" liveChange="markChanged"/>
+												<Input type="Number" value="{PriceUI>PriceBielerPlus}" liveChange="markChanged"/>
+												<Input type="Number" value="{PriceUI>PriceNotBieler}" liveChange="markChanged"/>
+												<Button text="Löschen" press="onDeletePrice" visible="{PriceUI>IsDeleteAllowed}"></Button>
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+								<Button text="Neuer Eintrag hinzufügen" press="onNewPrice"></Button>
+								<Button text="Änderungen verwerfen" press="onCancel" id="cancelPrice"></Button>
+								<Button text="Änderungen speichern" press="onSave" id="savePrice"></Button>
+							</IconTabFilter>
+							<IconTabFilter text="Abrechnungsperioden" key="periods">
+								<Table id="idPeriodesTable" inset="false" items="{ path: 'PeriodsUI>/', sorter: { path: 'Id' } }">
+									<headerToolbar>
+										<Toolbar>
+											<Title text="Abrechnungsperioden" level="H2"/>
+										</Toolbar>
+									</headerToolbar>
+									<columns>
+										<Column>
+											<Text text="Id"/>
+										</Column>
+										<Column>
+											<Text text="Startdatum"/>
+										</Column>
+										<Column>
+											<Text text="Enddatum"/>
+										</Column>
+										<Column>
+											<Text text="Text deutsch"/>
+										</Column>
+										<Column>
+											<Text text="Text französisch"/>
+										</Column>
+										<Column>
+											<Text text="Nachverrechnung erlaubt"/>
+										</Column>
+										<Column/>
+									</columns>
+									<items>
+										<ColumnListItem>
+											<cells>
+												<ObjectIdentifier title="{PeriodsUI>Id}"/>
+												<ObjectIdentifier title="{path: 'PeriodsUI>Startdate', type: 'sap.ui.model.type.Date', formatOptions: { style: 'long' } }"/>
+												<ObjectIdentifier title="{path: 'PeriodsUI>Enddate', type: 'sap.ui.model.type.Date', formatOptions: { style: 'long' } }"/>
+												<Input type="Text" value="{PeriodsUI>TextD}" liveChange="markChanged"/>
+												<Input type="Text" value="{PeriodsUI>TextF}" liveChange="markChanged"/>
+												<CheckBox selected="{PeriodsUI>IsLatePaymentAllowed}" select="markChanged"/>
+												<Button text="Löschen" press="onDeletePeriod"></Button>
+											</cells>
+										</ColumnListItem>
+									</items>
+								</Table>
+								<Button text="Neuer Eintrag hinzufügen" press="onNewPeriod"></Button>
+								<Button text="Änderungen verwerfen" press="onCancel" id="cancelPeriods"></Button>
+								<Button text="Änderungen speichern" press="onSave" id="onSavePeriods"></Button>
+							</IconTabFilter>
+							<IconTabFilter text="Rechnungstitel / Verzeichnisse pro Periode" key="billingPeriod">
+								<Table mode="None" id="oTableInvoiceTitles">
+									<headerToolbar>
+										<OverflowToolbar>
+											<Title text="Rechnungstitel pro Periode" level="H2"/>
+											<ToolbarSpacer/>
+											<Button id="editButton" text="Editieren" type="Transparent" press="onEditInvoiceTitle"/>
+											<Button id="saveButton" text="Speichern" type="Transparent" press="onSaveInvoiceTitle" visible="false"/>
+											<Button id="cancelButton" text="Abbrechen" type="Transparent" press="onCancelInvoiceTitle" visible="false"/>
+										</OverflowToolbar>
+									</headerToolbar>
+									<columns>
+										<Column width="20%">
+											<Text text="Perioden-Id"/>
+										</Column>
+										<Column>
+											<Text text="Rechnungstitel"/>
+										</Column>
+										<Column>
+											<Text text="Verzeichnisname"/>
+										</Column>
+										<Column>
+											<Text text="Druckdatum"/>
+										</Column>
+									</columns>
+								</Table>
+							</IconTabFilter>
+							<IconTabFilter text="Tagesteile für Import der Buchungen">
+								<Table mode="None" id="oTablePartOfDays">
+									<headerToolbar>
+										<OverflowToolbar>
+											<Title text="Teil des Tages der Aktivität" level="H2"/>
+											<ToolbarSpacer/>
+											<Button id="newPartOfDayButton" text="Anlegen" type="Transparent" press="onNewPartOfDay"/>
+											<Button id="editPartOfDayButton" text="Editieren" type="Transparent" press="onEditPartOfDay"/>
+											<Button id="savePartOfDayButton" text="Speichern" type="Transparent" press="onSavePartOfDay" visible="false"/>
+											<Button id="cancelPartOfDayButton" text="Abbrechen" type="Transparent" press="onCancelPartOfDay" visible="false"/>
+										</OverflowToolbar>
+									</headerToolbar>
+									<columns>
+										<Column width="20%">
+											<Text text="Id"/>
+										</Column>
+										<Column>
+											<Text text="Text Deutsch"/>
+										</Column>
+										<Column>
+											<Text text="Text Franz. (nicht verwendet)"/>
+										</Column>
+										<Column/>
+									</columns>
+								</Table>
+							</IconTabFilter>
+						</items>
+					</IconTabBar>
+				</content>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

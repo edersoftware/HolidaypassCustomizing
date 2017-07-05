@@ -1,0 +1,39 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout">
+	<Popover title="Neue Fakturierungsperiode anlegen" class="sapUiContentPadding" placement="Auto" modal="true">
+		<content>
+			<f:SimpleForm minWidth="1024" maxContainerCols="2" editable="true" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3"
+				emptySpanL="4" emptySpanM="4" columnsL="1" columnsM="1" class="editableForm">
+				<f:content>
+					<Label text="Id"/>
+					<Input value="{NewPeriodUIModel>/PeriodId}" visible="{NewPeriodUIModel>/isNewPeriod}" editable = "false"/>
+					<Select visible="{= !${NewPeriodUIModel>/isNewPeriod}}" forceSelection="false" selectedKey="{NewPeriodUIModel>/periodId}"
+						items="{ path: 'NewPeriodUIModel>/existingPeriods' }">
+						<core:Item key="{NewPeriodUIModel>key}" text="{NewPeriodUIModel>key}"/>
+					</Select>
+					<Label text="Startdatum"/>
+					<DatePicker id="DatePickerStartDate"
+						value="{NewPeriodUIModel>/StartDate}" valueFormat="yyyy-MM-dd" displayFormat="long"
+						class="sapUiSmallMarginBottom"/>
+					<Label text="Enddatum"/>
+					<DatePicker id="DatePickerEndDate"
+						value="{NewPeriodUIModel>/EndDate}" valueFormat="yyyy-MM-dd" displayFormat="long"
+						class="sapUiSmallMarginBottom"/>
+					<Label text="Text deutsch"/>
+					<Input type="Text" value = "{NewPeriodUIModel>/TextD}"/>
+					<Label text="Text französisch"/>
+					<Input type="Text" value = "{NewPeriodUIModel>/TextF}"/>
+					<Label text="Nachverrechnung erlaubt ?"/>
+					<CheckBox selected="{NewPeriodUIModel>/IsLatePaymentAllowed}"/>
+				</f:content>
+			</f:SimpleForm>
+		</content>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button id="cancelNewPeriod" text="Änderungen verwerfen" press="onCancelNewPeriod"/>
+				<Button id="saveNewPeriod" text="Speichern" press="onSaveNewPeriod"/>
+			</Toolbar>
+		</footer>
+		<Image src="{ProductPicUrl}" width="15em" densityAware="false"/>
+	</Popover>
+</core:FragmentDefinition>
