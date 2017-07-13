@@ -1,3 +1,7 @@
+<!--
+This fragment uses an own JSON model. This because the handling is a bit easier than access the elements direct.
+The value etc. of different elements will defined before they exists
+-->
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout">
 	<Popover title="Neue Fakturierungsperiode anlegen" class="sapUiContentPadding" placement="Auto" modal="true">
 		<content>
@@ -5,23 +9,21 @@
 				emptySpanL="4" emptySpanM="4" columnsL="1" columnsM="1" class="editableForm">
 				<f:content>
 					<Label text="Id"/>
-					<Input value="{NewPeriodUIModel>/PeriodId}" visible="{NewPeriodUIModel>/isNewPeriod}" editable = "false"/>
+					<Input value="{NewPeriodUIModel>/PeriodId}" visible="{NewPeriodUIModel>/isNewPeriod}" editable="false"/>
 					<Select visible="{= !${NewPeriodUIModel>/isNewPeriod}}" forceSelection="false" selectedKey="{NewPeriodUIModel>/periodId}"
 						items="{ path: 'NewPeriodUIModel>/existingPeriods' }">
 						<core:Item key="{NewPeriodUIModel>key}" text="{NewPeriodUIModel>key}"/>
 					</Select>
 					<Label text="Startdatum"/>
-					<DatePicker id="DatePickerStartDate"
-						value="{NewPeriodUIModel>/StartDate}" valueFormat="yyyy-MM-dd" displayFormat="long"
+					<DatePicker id="DatePickerStartDate" value="{NewPeriodUIModel>/StartDate}" valueFormat="yyyy-MM-dd" displayFormat="long"
 						class="sapUiSmallMarginBottom"/>
 					<Label text="Enddatum"/>
-					<DatePicker id="DatePickerEndDate"
-						value="{NewPeriodUIModel>/EndDate}" valueFormat="yyyy-MM-dd" displayFormat="long"
+					<DatePicker id="DatePickerEndDate" value="{NewPeriodUIModel>/EndDate}" valueFormat="yyyy-MM-dd" displayFormat="long"
 						class="sapUiSmallMarginBottom"/>
 					<Label text="Text deutsch"/>
-					<Input type="Text" value = "{NewPeriodUIModel>/TextD}"/>
+					<Input type="Text" value="{NewPeriodUIModel>/TextD}"/>
 					<Label text="Text französisch"/>
-					<Input type="Text" value = "{NewPeriodUIModel>/TextF}"/>
+					<Input type="Text" value="{NewPeriodUIModel>/TextF}"/>
 					<Label text="Nachverrechnung erlaubt ?"/>
 					<CheckBox selected="{NewPeriodUIModel>/IsLatePaymentAllowed}"/>
 				</f:content>

@@ -5,11 +5,11 @@
 				emptySpanL="4" emptySpanM="4" columnsL="1" columnsM="1" class="editableForm">
 				<f:content>
 					<Label text="Id"/>
-					<Input type="Text" value="{NewPartOfDay>/id}"/>
+					<Input type="Text" id="oInputPartOfDayId"/>
 					<Label text="Text Deutsch"/>
-					<Input type="Text" value="{NewPartOfDay>/text_d}"/>
+					<Input type="Text" id="oInputPartOfDayTextD"/>
 					<Label text="Text Französisch (Nicht verwendet)"/>
-					<Input type="Text" value="{NewPartOfDay>/text_f}"/>
+					<Input type="Text" id="oInputPartOfDayTextF"/>
 				</f:content>
 			</f:SimpleForm>
 		</content>

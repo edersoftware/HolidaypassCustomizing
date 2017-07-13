@@ -69,37 +69,7 @@
 					"bundleName": "ch.bielHolidayPassCustomizing.i18n.i18n"
 				}
 			},
-			"control": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {
-					"defaultBindingMode": "TwoWay"
-				},
-				"preload": false
-			},
-			"PriceUI": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {
-					"defaultBindingMode": "TwoWay"
-				}
-			},"PeriodsUI": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {
-					"defaultBindingMode": "TwoWay"
-				}
-			},
-			"BaseSettingUIModel": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {
-					"defaultBindingMode": "TwoWay"
-				}
-			},
-			"partOfDay": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {
-					"defaultBindingMode": "TwoWay"
-				}
-			},
-			"invoiceTitle": {
+			"UI": {
 				"type": "sap.ui.model.json.JSONModel",
 				"settings": {
 					"defaultBindingMode": "TwoWay"
@@ -116,11 +86,9 @@
 			}
 		},
 		"resources": {
-			"css": [
-				{
-					"uri": "css/style.css"
-				}
-			]
+			"css": [{
+				"uri": "css/style.css"
+			}]
 		}
 	},
 	"sap.platform.abap": {

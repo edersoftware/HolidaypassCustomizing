@@ -8,14 +8,14 @@ sap.ui.define([
 	return Controller.extend("ch.bielHolidayPassCustomizing.controller.Main", {
 		handleGetNextSAPInvoiceNumber: function() {
 			var that = this;
-			var sYear = this.getView().getModel("BaseSettingUIModel").getProperty("/BillingYear");
+			var sYear = this.getView().getModel("UI").getProperty("/baseSettings/BillingYear");
 			this.getOwnerComponent().getModel('ZFP_SRV').callFunction("/getNextFPInvoiceNumber", {
 				method: "GET",
 				urlParameters: {
 					year: sYear
 				},
 				success: function(oData, response) {
-					that.getView().getModel("BaseSettingUIModel").setProperty("/BillingNumberAct", oData.number);
+					that.getView().getModel("UI").setProperty("/baseSettings/BillingNumberAct", oData.number);
 					that.enableSaveAndCancelBaseSettings();
 				},
 				error: function(oError) {
@@ -29,7 +29,7 @@ sap.ui.define([
 			this.getOwnerComponent().getModel('ZFP_SRV').callFunction("/getNextFPSAPDebitorNumber", {
 				method: "GET",
 				success: function(oData, response) {
-					that.getView().getModel("BaseSettingUIModel").setProperty("/SapDebitorAct", oData.number);
+					that.getView().getModel("UI").setProperty("/baseSettings/SapDebitorAct", oData.number);
 					that.enableSaveAndCancelBaseSettings();
 				},
 				error: function(oError) {
@@ -39,20 +39,18 @@ sap.ui.define([
 			});
 		},
 		onNewPartOfDay: function(oEvent) {
-			this.getView().getModel("NewPartOfDay").setProperty("/", {
-				id: "",
-				text_d: "",
-				text_f: ""
-			});
+
 			var oButton = oEvent.getSource();
 			if (!this._oPopover_NewPartOfDay) {
 				this._oPopover_NewPartOfDay = sap.ui.xmlfragment("ch.bielHolidayPassCustomizing.fragments.newPartOfDay", this);
 				this.getView().addDependent(this._oPopover_NewPartOfDay);
 			}
 
-			// delay because addDependent will do a async rerendering and the actionSheet will immediately close without it.
 			jQuery.sap.delayedCall(0, this, function() {
 				this._oPopover_NewPartOfDay.openBy(oButton);
+				sap.ui.getCore().byId("oInputPartOfDayId").setValue("");
+				sap.ui.getCore().byId("oInputPartOfDayTextD").setValue("");
+				sap.ui.getCore().byId("oInputPartOfDayTextF").setValue("");
 			});
 
 		},
@@ -61,7 +59,7 @@ sap.ui.define([
 			var sPressedButton = oEvent.getParameter("id");
 			var pos = sPressedButton.lastIndexOf("-");
 			var index = sPressedButton.substring(pos + 1, sPressedButton.length);
-			var oPriceToRemove = this.getView().getModel("PriceUI").getProperty("/" + index);
+			var oPriceToRemove = this.getView().getModel("UI").getProperty("prices/" + index);
 			var oModel = this.getOwnerComponent().getModel('ZFP_SRV');
 			sap.ui.core.BusyIndicator.show(0);
 			oModel.remove("/PricingSet('" + oPriceToRemove.Type + "')", {
@@ -83,11 +81,10 @@ sap.ui.define([
 		onSaveNewPartOfDay: function() {
 			var that = this;
 			var oNewPartOfDay = {
-				Id: this.getView().getModel("NewPartOfDay").getProperty("/id"),
-				TitleD: this.getView().getModel("NewPartOfDay").getProperty("/text_d"),
-				TitleF: this.getView().getModel("NewPartOfDay").getProperty("/text_f")
+				Id: sap.ui.getCore().byId("oInputPartOfDayId").getValue(),
+				TitleD: sap.ui.getCore().byId("oInputPartOfDayTextD").getValue(),
+				TitleF: sap.ui.getCore().byId("oInputPartOfDayTextF").getValue()
 			};
-
 			this.getOwnerComponent().getModel('ZFP_SRV').create("/PartOfDaySet", oNewPartOfDay, {
 				success: function(oData, response) {
 					that.loadPartOfDayData();
@@ -104,7 +101,7 @@ sap.ui.define([
 			var sPressedButton = oEvent.getParameter("id");
 			var pos = sPressedButton.lastIndexOf("-");
 			var index = sPressedButton.substring(pos + 1, sPressedButton.length);
-			var oPeriodToRemove = this.getView().getModel("PeriodsUI").getProperty("/" + index);
+			var oPeriodToRemove = this.getView().getModel("UI").getProperty("/periods/" + index);
 			var oModel = this.getOwnerComponent().getModel('ZFP_SRV');
 
 			oModel.remove("/HolidayPassPeriodSet(Id='" + oPeriodToRemove.Id + "',Startdate=" + ODataUtils.formatValue(oPeriodToRemove.Startdate,
@@ -183,7 +180,7 @@ sap.ui.define([
 			id = id.substring(pos + 2, id.length);
 			switch (id) {
 				case "saveInvoiceTitle":
-					var aInvoiceTitles = this._getChangedObjects(this.getView().getModel("invoiceTitle").getProperty("/"));
+					var aInvoiceTitles = this._getChangedObjects(this.getView().getModel("UI").getProperty("/invoiceTitle/"));
 					for (var i = 0; i < aInvoiceTitles.length; i++) {
 						aInvoiceTitles[i].isChanged = false;
 						var sPath = "/PeriodInvoiceTitleSet('" + aInvoiceTitles[i].Period + "')";
@@ -199,7 +196,7 @@ sap.ui.define([
 					this.getView().byId("saveInvoiceTitle").setEnabled(false);
 					break;
 				case "savePeriods":
-					var aPeriods = this._getChangedObjects(this.getView().getModel("PeriodsUI").getProperty("/"));
+					var aPeriods = this._getChangedObjects(this.getView().getModel("UI").getProperty("/periods/"));
 					for (i = 0; i < aPeriods.length; i++) {
 						delete aPeriods[i].isChanged;
 						sPath = "/HolidayPassPeriodSet(Id='" + aPeriods[i].Id + "',Startdate=" + ODataUtils.formatValue(aPeriods[i].Startdate,
@@ -212,7 +209,7 @@ sap.ui.define([
 					this.getView().byId("savePeriods").setEnabled(false);
 					break;
 				case "saveBaseSetting":
-					var oUpdatedBaseSettings = this.getView().getModel("BaseSettingUIModel").getProperty("/");
+					var oUpdatedBaseSettings = this.getView().getModel("UI").getProperty("/baseSettings/");
 					oUpdatedBaseSettings.Printer = this.getView().byId("oSelectPrinter").getSelectedKey();
 					this.getOwnerComponent().getModel("ZFP_SRV").create("/BaseSettingSet", oUpdatedBaseSettings, {
 						success: function() {
@@ -228,7 +225,7 @@ sap.ui.define([
 					});
 					break;
 				case "savePrice":
-					var aPrices = this._getChangedObjects(this.getView().getModel("PriceUI").getProperty("/"));
+					var aPrices = this._getChangedObjects(this.getView().getModel("UI").getProperty("/prices/"));
 					this.getView().byId("savePrice").setEnabled(false);
 					this.getView().byId("cancelPrice").setEnabled(false);
 					for (i = 0; i < aPrices.length; i++) {
@@ -245,7 +242,7 @@ sap.ui.define([
 
 					break;
 				case "savePartOfDay":
-					var aPartOfDay = this._getChangedObjects(this.getView().getModel("partOfDay").getProperty("/"));
+					var aPartOfDay = this._getChangedObjects(this.getView().getModel("UI").getProperty("/partOfDay/"));
 					this.getView().byId("savePartOfDay").setEnabled(false);
 					this.getView().byId("cancelPartOfDay").setEnabled(false);
 					for (i = 0; i < aPartOfDay.length; i++) {
@@ -256,7 +253,7 @@ sap.ui.define([
 						};
 						aPartOfDay[i].isChanged = false;
 						isLastObject = (aPartOfDay.length === (i + 1)) ? true : false;
-						this._updateEntity("/PartOfDaySet('" +oPartOfDayToUpdate.Id + "')", oPartOfDayToUpdate, isLastObject);
+						this._updateEntity("/PartOfDaySet('" + oPartOfDayToUpdate.Id + "')", oPartOfDayToUpdate, isLastObject);
 					}
 
 					break;
@@ -302,10 +299,10 @@ sap.ui.define([
 		loadBaseSetting: function() {
 			var oModel = this.getOwnerComponent().getModel('ZFP_SRV');
 			oModel.setUseBatch(false);
-			var oUIModel = this.getOwnerComponent().getModel("BaseSettingUIModel");
+			var oUIModel = this.getOwnerComponent().getModel("UI");
 			oModel.read('/BaseSettingSet', {
 				success: function(oData, response) {
-					oUIModel.setProperty("/", oData.results[0]);
+					oUIModel.setProperty("/baseSettings/", oData.results[0]);
 				},
 				error: function(oError) {
 					MessageBox.error("Technischer Fehler, bitte SAP CCC informieren");
@@ -316,10 +313,10 @@ sap.ui.define([
 		},
 		loadPartOfDayData: function() {
 			var oModel = this.getOwnerComponent().getModel('ZFP_SRV');
-			var oUIModel = this.getOwnerComponent().getModel("partOfDay");
+			var oUIModel = this.getOwnerComponent().getModel("UI");
 			oModel.read('/PartOfDaySet', {
 				success: function(oData) {
-					oUIModel.setProperty("/", oData.results);
+					oUIModel.setProperty("/partOfDay/", oData.results);
 				},
 				error: function(oError) {
 					MessageBox.error("Technischer Fehler, bitte SAP CCC informieren");
@@ -329,11 +326,11 @@ sap.ui.define([
 		},
 		loadInvoiceTitleData: function() {
 			var oModel = this.getOwnerComponent().getModel('ZFP_SRV');
-			var oUIModel = this.getOwnerComponent().getModel("invoiceTitle");
+			var oUIModel = this.getOwnerComponent().getModel("UI");
 			oModel.read('/PeriodInvoiceTitleSet', {
 				success: function(oData) {
 					var aInvoiceTitle = oData.results;
-					oUIModel.setProperty("/", aInvoiceTitle);
+					oUIModel.setProperty("/invoiceTitle/", aInvoiceTitle);
 				},
 				error: function(oError) {
 					MessageBox.error("Technischer Fehler, bitte SAP CCC informieren");
@@ -345,7 +342,7 @@ sap.ui.define([
 		loadPriceData: function() {
 			var oModel = this.getOwnerComponent().getModel('ZFP_SRV');
 			oModel.setUseBatch(false);
-			var oUIModel = this.getView().getModel("PriceUI");
+			var oUIModel = this.getView().getModel("UI");
 			oModel.read('/PricingSet', {
 				success: function(oData, response) {
 					//	var oModelData = { periods : oData };
@@ -362,7 +359,7 @@ sap.ui.define([
 						}
 
 					}
-					oUIModel.setProperty("/", aPrices);
+					oUIModel.setProperty("/prices/", aPrices);
 				},
 				error: function(oError) {
 					MessageBox.error("Technischer Fehler, bitte SAP CCC informieren");
@@ -374,11 +371,11 @@ sap.ui.define([
 		loadPeriodData: function() {
 			var oModel = this.getOwnerComponent().getModel('ZFP_SRV');
 			oModel.setUseBatch(false);
-			var oUIModel = this.getView().getModel("PeriodsUI");
+			var oUIModel = this.getView().getModel("UI");
 			oModel.read('/HolidayPassPeriodSet', {
 				success: function(oData, response) {
 					//	var oModelData = { periods : oData };
-					oUIModel.setProperty("/", oData.results);
+					oUIModel.setProperty("/periods/", oData.results);
 				},
 				error: function(oError) {
 					MessageBox.error("Technischer Fehler, bitte SAP CCC informieren");
@@ -387,12 +384,6 @@ sap.ui.define([
 		},
 
 		onInit: function() {
-			var oUIModelNewPartOfDay = new sap.ui.model.json.JSONModel({
-				id: "",
-				text_d: "",
-				text_f: ""
-			});
-			this.getView().setModel(oUIModelNewPartOfDay, "NewPartOfDay");
 			this.loadBaseSetting();
 		},
 
@@ -401,7 +392,7 @@ sap.ui.define([
 			var sPressedButton = oEvent.getParameter("id");
 			var pos = sPressedButton.lastIndexOf("-");
 			var index = sPressedButton.substring(pos + 1, sPressedButton.length);
-			var oPartOfDayToRemove = this.getView().getModel("partOfDay").getProperty("/" + index);
+			var oPartOfDayToRemove = this.getView().getModel("UI").getProperty("/partOfDay/" + index);
 			var oModel = this.getOwnerComponent().getModel('ZFP_SRV');
 
 			oModel.remove("/PartOfDaySet('" + oPartOfDayToRemove.Id + "')", {
@@ -457,38 +448,36 @@ sap.ui.define([
 			var sIdOfChangedItem = oEvent.getSource().getId();
 			var iIndex = sIdOfChangedItem.substring(sIdOfChangedItem.lastIndexOf("-") + 1, sIdOfChangedItem.length);
 			var sTablename = sIdOfChangedItem.substring(sIdOfChangedItem.lastIndexOf("--") + 2, sIdOfChangedItem.lastIndexOf("-"));
-			var sModelName = "";
+			var sPath = "";
 			switch (sTablename) {
 				case "idPeriodesTable":
-					sModelName = "PeriodsUI";
+					sPath = "/periods/";
 					this.getView().byId("cancelPeriods").setEnabled(true);
 					this.getView().byId("savePeriods").setEnabled(true);
 					break;
 				case "idPriceTable":
-					sModelName = "PriceUI";
+					sPath = "/prices/";
 					this.getView().byId("cancelPrice").setEnabled(true);
 					this.getView().byId("savePrice").setEnabled(true);
 					break;
 				case "oTableInvoiceTitles":
-					sModelName = "invoiceTitle";
+					sPath = "/invoiceTitle/";
 					this.getView().byId("cancelInvoiceTitle").setEnabled(true);
 					this.getView().byId("saveInvoiceTitle").setEnabled(true);
 					break;
 				case "oTablePartOfDays":
-					sModelName = "partOfDay";
+					sPath = "/partOfDay/";
 					this.getView().byId("cancelPartOfDay").setEnabled(true);
 					this.getView().byId("savePartOfDay").setEnabled(true);
 					break;
 
 			}
-			var oUIModel = this.getView().getModel(sModelName);
-			oUIModel.setProperty("/" + iIndex + "/isChanged", true);
-
+			var oUIModel = this.getView().getModel("UI");
+			oUIModel.setProperty(sPath + iIndex + "/isChanged", true);
 		},
 		onNewPrice: function(oEvent) {
 			this.onShowPopoverNewPrice(oEvent.getSource(), this);
 		},
-
 		onNewPeriod: function(oEvent) {
 			var oButton = oEvent.getSource();
 			var oView = this.getView();
@@ -530,11 +519,10 @@ sap.ui.define([
 								},
 								async: false
 							});
-
 							break;
 						case "Neuer Zeitraum":
 							oNewPeriodModel.setProperty("/isNewPeriod", false);
-							var aPeriods = oView.getModel("PeriodsUI").getProperty("/");
+							var aPeriods = oView.getModel("UI").getProperty("/periods/");
 							var aPeriodsValueHelp = [];
 							for (var i in aPeriods) {
 								if (aPeriodsValueHelp.indexOf(aPeriods[i].Id) === -1) {
@@ -585,7 +573,6 @@ sap.ui.define([
 				async: true
 			});
 			this._oPopover_NewPrice.close();
-
 		},
 		onSaveNewPeriod: function() {
 			var that = this;
@@ -612,11 +599,8 @@ sap.ui.define([
 					sap.ui.core.BusyIndicator.hide();
 				},
 				async: true
-
 			});
 			this._oPopover.close();
-
 		}
-
 	});
 });
