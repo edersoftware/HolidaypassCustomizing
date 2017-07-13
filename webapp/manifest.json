@@ -76,6 +76,35 @@
 				},
 				"preload": false
 			},
+			"PriceUI": {
+				"type": "sap.ui.model.json.JSONModel",
+				"settings": {
+					"defaultBindingMode": "TwoWay"
+				}
+			},"PeriodsUI": {
+				"type": "sap.ui.model.json.JSONModel",
+				"settings": {
+					"defaultBindingMode": "TwoWay"
+				}
+			},
+			"BaseSettingUIModel": {
+				"type": "sap.ui.model.json.JSONModel",
+				"settings": {
+					"defaultBindingMode": "TwoWay"
+				}
+			},
+			"partOfDay": {
+				"type": "sap.ui.model.json.JSONModel",
+				"settings": {
+					"defaultBindingMode": "TwoWay"
+				}
+			},
+			"invoiceTitle": {
+				"type": "sap.ui.model.json.JSONModel",
+				"settings": {
+					"defaultBindingMode": "TwoWay"
+				}
+			},
 			"ZFP_SRV": {
 				"type": "sap.ui.model.odata.v2.ODataModel",
 				"settings": {
@@ -83,8 +112,7 @@
 					"defaultBindingMode": "TwoWay",
 					"defaultCountMode": "Request"
 				},
-				"dataSource": "ZFP_SRV",
-				"preload": true
+				"dataSource": "ZFP_SRV"
 			}
 		},
 		"resources": {
