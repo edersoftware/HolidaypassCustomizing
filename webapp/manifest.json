@@ -86,9 +86,11 @@
 			}
 		},
 		"resources": {
-			"css": [{
-				"uri": "css/style.css"
-			}]
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
 		}
 	},
 	"sap.platform.abap": {
