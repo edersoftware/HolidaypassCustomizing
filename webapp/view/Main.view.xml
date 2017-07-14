@@ -11,49 +11,50 @@
 									emptySpanL="4" emptySpanM="4" columnsL="1" columnsM="1" class="editableForm">
 									<f:content>
 										<Label text="Kundenidentifikation"/>
-										<Input value="{UI>/baseSettings/CustomerIdent}" liveChange = "enableSaveAndCancelBaseSettings"/>
+										<Input value="{UI>/baseSettings/CustomerIdent}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text="Abrechnungsjahr"/>
-										<Input value="{UI>/baseSettings/BillingYear}" liveChange = "enableSaveAndCancelBaseSettings" />
+										<Input value="{UI>/baseSettings/BillingYear}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text="Systemidentifikation"/>
-										<Input value="{UI>/baseSettings/Systemid}" liveChange = "enableSaveAndCancelBaseSettings" />
+										<Input value="{UI>/baseSettings/Systemid}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text="Aktuelle Fakturanummer"/>
 										<HBox>
-											<Input value="{UI>/baseSettings/BillingNumberAct}" liveChange = "enableSaveAndCancelBaseSettings" />
-											<Button class="sapUiMediumMarginBegin" text="Von SAP System lesen" press="handleGetNextSAPInvoiceNumber"/>
+											<Input value="{UI>/baseSettings/BillingNumberAct}" liveChange="enableSaveAndCancelBaseSettings"/>
+											<Button class="sapUiMediumMarginBegin" id="oButtonGetNextSAPInvoiceNumber" text="Von SAP System lesen" press="handleGetNextSAPInvoiceNumber"/>
 										</HBox>
 										<Label text="Aktuelle SAP Ferienpass Debitorennummer"/>
 										<HBox>
-											<Input value="{UI>/baseSettings/SapDebitorAct}" liveChange = "enableSaveAndCancelBaseSettings" />
+											<Input value="{UI>/baseSettings/SapDebitorAct}" liveChange="enableSaveAndCancelBaseSettings"/>
 											<Button class="sapUiMediumMarginBegin" text="Von SAP System lesen" press="handleGetNextSAPDebitorNumber"/>
 										</HBox>
 										<Label text="Ziel-Kostenstelle"/>
-										<Input value="{UI>/baseSettings/Costcenter}" liveChange = "enableSaveAndCancelBaseSettings" />
+										<Input value="{UI>/baseSettings/Costcenter}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text="Ziel-PSP Element oder Investitionsauftrag"/>
-										<Input value="{UI>/baseSettings/PsPElement}" liveChange = "enableSaveAndCancelBaseSettings" />
+										<Input value="{UI>/baseSettings/PsPElement}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text="Ziel-Innenauftrag"/>
-										<Input value="{UI>/baseSettings/InternalOrder}" liveChange = "enableSaveAndCancelBaseSettings" />
+										<Input value="{UI>/baseSettings/InternalOrder}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text="Ziel-Erlöskonto"/>
-										<Input value="{UI>/baseSettings/RedeemingAccount}" liveChange = "enableSaveAndCancelBaseSettings" />
+										<Input value="{UI>/baseSettings/RedeemingAccount}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text="Wurzelverzeichnis für Ferienpass"/>
-										<Input value="{UI>/baseSettings/RootDirectory}" liveChange = "enableSaveAndCancelBaseSettings" />
+										<Input value="{UI>/baseSettings/RootDirectory}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text=""/>
 										<Text text="Das SAP-System muss Vollzugriff auf dieses Verzeichnis haben"/>
 										<Label text="Export Verzeichnisname"/>
-										<Input value="{UI>/baseSettings/ExportDirectory}" liveChange = "enableSaveAndCancelBaseSettings" />
+										<Input value="{UI>/baseSettings/ExportDirectory}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text="Rechnungsprint Verzeichnisname"/>
-										<Input value="{UI>/baseSettings/PrintDirectory}" liveChange = "enableSaveAndCancelBaseSettings" />
-										<Label text="Drucker für Rechnungsmassendruck" />
-										<Select id="oSelectPrinter" change = "enableSaveAndCancelBaseSettings" forceSelection="true" selectedKey="{UI>/baseSettings/Printer}" items="{ path: 'ZFP_SRV>/PrinterSet'}">
+										<Input value="{UI>/baseSettings/PrintDirectory}" liveChange="enableSaveAndCancelBaseSettings"/>
+										<Label text="Drucker für Rechnungsmassendruck"/>
+										<Select id="oSelectPrinter" change="enableSaveAndCancelBaseSettings" forceSelection="true" selectedKey="{UI>/baseSettings/Printer}"
+											items="{ path: 'ZFP_SRV>/PrinterSet'}">
 											<core:Item key="{ZFP_SRV>Dest}" text="{ZFP_SRV>Name}"/>
 										</Select>
 										<Label text="Ferienpass SAP Debitoren Start"/>
-										<Input value="{UI>/baseSettings/SapDebitorStart}" liveChange = "enableSaveAndCancelBaseSettings"/>
+										<Input value="{UI>/baseSettings/SapDebitorStart}" liveChange="enableSaveAndCancelBaseSettings"/>
 										<Label text="Ferienpass SAP Debitoren End"/>
-										<Input value="{UI>/baseSettings/SapDebitorEnd}" liveChange = "enableSaveAndCancelBaseSettings"/>
+										<Input value="{UI>/baseSettings/SapDebitorEnd}" liveChange="enableSaveAndCancelBaseSettings"/>
 									</f:content>
 								</f:SimpleForm>
-								<Button text="Änderungen verwerfen" press="onCancel" id="cancelBaseSetting" enabled = "false" />
-								<Button text="Änderungen speichern" press="onSave" id="saveBaseSetting" enabled = "false" />
+								<Button text="Änderungen verwerfen" press="onCancel" id="cancelBaseSetting" enabled="false"/>
+								<Button text="Änderungen speichern" press="onSave" id="saveBaseSetting" enabled="false"/>
 							</IconTabFilter>
 							<IconTabFilter text="Preise" key="prices">
 								<Table id="idPriceTable" inset="false" items="{ path: 'UI>/prices/', sorter: { path: 'Type' } }">
@@ -166,7 +167,9 @@
 												<Text text="{UI>Period}"/>
 												<Input value="{UI>Title}" liveChange="markChanged"/>
 												<Input value="{UI>Directory}" liveChange="markChanged"/>
-												<DatePicker value = "{path : 'UI>PrintDate' , type:'sap.ui.model.type.Date', formatOptions: { style: 'medium', UTC: true, strictParsing: true} }" displayFormat = "long" change="markChanged"/>
+												<DatePicker
+													value="{path : 'UI>PrintDate' , type:'sap.ui.model.type.Date', formatOptions: { style: 'medium', UTC: true, strictParsing: true} }"
+													displayFormat="long" change="markChanged"/>
 											</cells>
 										</ColumnListItem>
 									</items>
@@ -193,20 +196,20 @@
 										</Column>
 										<Column/>
 									</columns>
-																		<items>
+									<items>
 										<ColumnListItem>
 											<cells>
 												<Text text="{UI>Id}"/>
 												<Input value="{UI>TitleD}" liveChange="markChanged"/>
 												<Input value="{UI>TitleF}" liveChange="markChanged"/>
-												<Button text = "Löschen" press = "onDeletePartOfDay"/>
+												<Button text="Löschen" press="onDeletePartOfDay"/>
 											</cells>
 										</ColumnListItem>
 									</items>
 								</Table>
-											<Button id="newPartOfDay" text="Neuer Eintrag hinzufügen" press="onNewPartOfDay"/>
-											<Button id="savePartOfDay" text="Änderungen speichern" press="onSave"/>
-											<Button id="cancelPartOfDay" text="Änderungen verwerfen" press="onCancel"/>
+								<Button id="newPartOfDay" text="Neuer Eintrag hinzufügen" press="onNewPartOfDay"/>
+								<Button id="savePartOfDay" text="Änderungen speichern" press="onSave"/>
+								<Button id="cancelPartOfDay" text="Änderungen verwerfen" press="onCancel"/>
 							</IconTabFilter>
 						</items>
 					</IconTabBar>

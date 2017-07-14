@@ -16,6 +16,7 @@ sap.ui.define([
 				},
 				success: function(oData, response) {
 					that.getView().getModel("UI").setProperty("/baseSettings/BillingNumberAct", oData.number);
+					document.activeElement.blur();
 					that.enableSaveAndCancelBaseSettings();
 				},
 				error: function(oError) {
@@ -30,6 +31,7 @@ sap.ui.define([
 				method: "GET",
 				success: function(oData, response) {
 					that.getView().getModel("UI").setProperty("/baseSettings/SapDebitorAct", oData.number);
+					document.activeElement.blur();
 					that.enableSaveAndCancelBaseSettings();
 				},
 				error: function(oError) {
